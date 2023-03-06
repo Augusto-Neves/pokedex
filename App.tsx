@@ -8,8 +8,11 @@ import {
 } from "@expo-google-fonts/roboto";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
+import { LogBox } from "react-native";
 
 SplashScreen.preventAutoHideAsync();
+
+LogBox.ignoreLogs(["Request failed with status code 404"]);
 
 export default function App() {
   const [fontsLoaded] = useFonts({
