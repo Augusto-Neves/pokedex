@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import {
   View,
   Text,
@@ -5,90 +6,122 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import clsx from "clsx";
+import { useNavigation } from "@react-navigation/native";
+import { PokemonProps } from "../../@types/pokemonProps";
+import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
+import { addingPadToString } from "../../utils/addingPadToString";
 
-interface BaseType {
-  name: string;
-  url: string;
-}
+// Pokemons Types Icons
+import GrassIcon from "../../assets/typeIcons/grass.svg";
+import FireIcon from "../../assets/typeIcons/fire.svg";
+import WaterIcon from "../../assets/typeIcons/water.svg";
+import BugIcon from "../../assets/typeIcons/bug.svg";
+import NormalIcon from "../../assets/typeIcons/normal.svg";
+import PoisonIcon from "../../assets/typeIcons/poison.svg";
+import ElectricIcon from "../../assets/typeIcons/electric.svg";
+import GroundIcon from "../../assets/typeIcons/ground.svg";
+import RockIcon from "../../assets/typeIcons/rock.svg";
+import PsychicIcon from "../../assets/typeIcons/psychic.svg";
+import FightingIcon from "../../assets/typeIcons/fighting.svg";
+import GhostIcon from "../../assets/typeIcons/ghost.svg";
+import FlyingIcon from "../../assets/typeIcons/flying.svg";
+import FairyIcon from "../../assets/typeIcons/fairy.svg";
+import IceIcon from "../../assets/typeIcons/ice.svg";
+import DragonIcon from "../../assets/typeIcons/dragon.svg";
+import DarkIcon from "../../assets/typeIcons/dark.svg";
+import SteelIcon from "../../assets/typeIcons/steel.svg";
 
-interface StatInterface {
-  base_stat: number;
-  effort: number;
-  stat: BaseType;
-}
-
-interface PokemonTypes {
-  slot: number;
-  type: BaseType;
-}
-
-interface PokemonProps {
-  pokemon: {
-    id: number;
-    name: string;
-    height: number;
-    weight: number;
-    baseExperience: number;
-    stats: StatInterface[];
-    types: PokemonTypes[];
-    sprite: string;
-  };
-}
 
 export function PokemonCard({ pokemon }: PokemonProps) {
-  const pokemonName =
-    pokemon.name?.charAt(0).toUpperCase() + pokemon.name?.slice(1);
-  const pokemonFirsType = pokemon.types[0].type.name;
+  const navigation = useNavigation();
+  const pokemonFirstType = pokemon.types[0].type.name;
+
+  function returnPokemonTypeIcon(pokemonType: string) {
+    const pokemonTypes = {
+      grass: <GrassIcon height={15} width={15} />,
+      fire: <FireIcon height={15} width={15} />,
+      water: <WaterIcon height={15} width={15} />,
+      bug: <BugIcon height={15} width={15} />,
+      normal: <NormalIcon height={15} width={15} />,
+      poison: <PoisonIcon height={15} width={15} />,
+      electric: <ElectricIcon height={15} width={15} />,
+      ground: <GroundIcon height={15} width={15} />,
+      rock: <RockIcon height={15} width={15} />,
+      psychic: <PsychicIcon height={15} width={15} />,
+      fighting: <FightingIcon height={15} width={15} />,
+      ghost: <GhostIcon height={15} width={15} />,
+      flying: <FlyingIcon height={15} width={15} />,
+      fairy: <FairyIcon height={15} width={15} />,
+      ice: <IceIcon height={15} width={15} />,
+      dragon: <DragonIcon height={15} width={15} />,
+      dark: <DarkIcon height={15} width={15} />,
+      steel: <SteelIcon height={15} width={15} />,
+      default: "",
+    };
+
+    return (pokemonTypes as any)[pokemonType] || pokemonTypes.default;
+  }
+
+  function handlePokemonNavigation() {
+    navigation.navigate("Pokemon", {
+      pokemon,
+    });
+  }
 
   return (
     <TouchableOpacity
       activeOpacity={0.7}
+      onPress={handlePokemonNavigation}
       className={clsx(
-        "w-[170px] h-[100px] items-center justify-center rounded-lg space-x-2  mx-3 my-3",
+        "w-[170px] h-[115px] items-center justify-center rounded-lg space-x-2  mx-3 my-3",
         {
-          "bg-[#38BF4B]": pokemonFirsType === "grass",
-          "bg-[#FF9741]": pokemonFirsType === "fire",
-          "bg-[#3692DC]": pokemonFirsType === "water",
-          "bg-[#83C300]": pokemonFirsType === "bug",
-          "bg-[#7e7777]": pokemonFirsType === "normal",
-          "bg-[#a040a0]": pokemonFirsType === "poison",
-          "bg-[#eddc24]": pokemonFirsType === "electric",
-          "bg-[#484747]": pokemonFirsType === "ground",
-          "bg-[#b6b6b6]": pokemonFirsType === "rock",
-          "bg-[#ee99ac]": pokemonFirsType === "psychic",
-          "bg-[#b09fa1]": pokemonFirsType === "fighting",
-          "bg-[#6f698c]": pokemonFirsType === "ghost",
-          "bg-[#f1f0f6]": pokemonFirsType === "flying",
-          "bg-[#e2a9df]": pokemonFirsType === "fairy",
-          "bg-[#0ed1f3]": pokemonFirsType === "ice",
-          "bg-[#ee5439]": pokemonFirsType === "dragon",
-          "bg-[#271111]": pokemonFirsType === "dark",
-          "bg-[#596570]": pokemonFirsType === "steal",
+          "bg-pokemon-type-grass": pokemonFirstType === "grass",
+          "bg-pokemon-type-fire": pokemonFirstType === "fire",
+          "bg-pokemon-type-water": pokemonFirstType === "water",
+          "bg-pokemon-type-bug": pokemonFirstType === "bug",
+          "bg-pokemon-type-normal": pokemonFirstType === "normal",
+          "bg-pokemon-type-poison": pokemonFirstType === "poison",
+          "bg-pokemon-type-electric": pokemonFirstType === "electric",
+          "bg-pokemon-type-ground": pokemonFirstType === "ground",
+          "bg-pokemon-type-rock": pokemonFirstType === "rock",
+          "bg-pokemon-type-psychic": pokemonFirstType === "psychic",
+          "bg-pokemon-type-fighting": pokemonFirstType === "fighting",
+          "bg-pokemon-type-ghost": pokemonFirstType === "ghost",
+          "bg-pokemon-type-flying": pokemonFirstType === "flying",
+          "bg-pokemon-type-fairy": pokemonFirstType === "fairy",
+          "bg-pokemon-type-ice": pokemonFirstType === "ice",
+          "bg-pokemon-type-dragon": pokemonFirstType === "dragon",
+          "bg-pokemon-type-dark": pokemonFirstType === "dark",
+          "bg-pokemon-type-steel": pokemonFirstType === "steel",
         }
       )}
     >
       <View className="flex-row justify-between items-center mx-3 mt-3">
         <Text className="font-semibold text-white text-base flex-1">
-          {pokemonName}
+          {capitalizeFirstLetter(pokemon.name)}
         </Text>
         <Text className="font-semibold text-white text-base">
-          #{String(pokemon.id).padStart(3, "0")}
+          #{addingPadToString(3, pokemon.id)}
         </Text>
       </View>
-      <View className="flex-row items-center justify-between">
-        <View className="flex-1">
-          {pokemon.types.map((pokemonType: any, index: number) => (
-            <View key={index}>
-              <Text className="text-white">
-                {pokemonType.type.name.charAt(0).toUpperCase() +
-                  pokemonType.type.name?.slice(1)}
-              </Text>
+      <View className="flex-row items-center justify-between ">
+        <View className="flex-1 gap-1">
+          {pokemon.types.map((pokemonType: any) => (
+            <View
+              key={pokemonType.type.name}
+              className="flex-row items-center justify-start  gap-2 bg-[#28314133] rounded-3xl"
+            >
+              <View className="flex-row items-center my-1">
+                {returnPokemonTypeIcon(pokemonType.type.name)}
+                <Text className="text-white ml-1 text-center">
+                  {capitalizeFirstLetter(pokemonType.type.name)}
+                </Text>
+              </View>
             </View>
           ))}
         </View>
         <ImageBackground
-          source={require("../../../assets/pokeball.png")}
+          source={require("../../assets/pokeball.png")}
           resizeMode="contain"
           className="items-center justify-center w-20 h-20"
         >
