@@ -1,9 +1,9 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ComparatorScreen } from "../screens/comparatorScreen";
-import { FavoriteScreen } from "../screens/favoritesScreen";
-import { HomeScreen } from "../screens/homeScreen";
-import { QuizScreen } from "../screens/quizScreen";
+import { ComparatorScreen } from "../screens/ComparatorScreen";
+import { FavoriteScreen } from "../screens/FavoritesScreen";
+import { QuizScreen } from "../screens/QuizScreen";
+import { HomeStackScreen } from "./HomeStackScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -49,7 +49,7 @@ export function AppRoutes() {
     >
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeStackScreen}
         options={{ title: "Home" }}
       />
       <Tab.Screen

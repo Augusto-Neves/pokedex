@@ -1,26 +1,27 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
-  ScrollView,
   ActivityIndicator,
   TextInput,
   TouchableOpacity,
-  Image,
+  FlatList,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PokemonCard } from "../components/PokemonCard";
-import { getPokemonsWithLimit } from "../service/axios";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { getPokemonsWithLimit, searchPokemon, server } from "../service/axios";
+import { MaterialIcons, Feather } from "@expo/vector-icons";
+import { RandomButton } from "../components/RandomButton";
 
 export function HomeScreen() {
   const [pokemons, setPokemons] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [typedText, setTypedText] = useState("");
 
-  async function getInitalPokemons() {
-    setIsLoading(true);
+  async function getInitialPokemons() {
     try {
+      setTypedText("");
+      setIsLoading(true);
       const initialPokemons = await getPokemonsWithLimit("10");
 
       setPokemons(initialPokemons);
@@ -28,18 +29,47 @@ export function HomeScreen() {
     } catch (error) {
       setIsLoading(false);
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
-  useEffect(() => {
-    getInitalPokemons();
-  }, []);
+  const handleSearch = useCallback(async () => {
+    try {
+      setIsLoading(true);
 
-  if (isLoading) {
-    return (
-      <ActivityIndicator size="large" color="#6b7280" className="flex-1" />
-    );
+      const pokemonSearched = await server.get(
+        `/pokemon/${typedText.toLowerCase()}`
+      );
+
+      setPokemons([pokemonSearched.data]);
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [typedText]);
+
+  function handleTextTyped(text: string) {
+    setTypedText(text);
   }
+
+  useEffect(() => {
+    if (typedText === "") {
+      getInitialPokemons();
+    }
+  }, [typedText]);
+
+  useEffect(() => {
+    if (typedText) {
+      handleSearch();
+    } else {
+      getInitialPokemons();
+    }
+  }, [typedText]);
 
   return (
     <>
@@ -56,7 +86,13 @@ export function HomeScreen() {
         <View className="flex-row items-center justify-around px-4">
           <View className="flex-row space-x-2  p-3 rounded-lg border border-gray-200 flex-1 items-center">
             <MaterialIcons name="search" size={20} />
-            <TextInput placeholder="Search a pokémon" keyboardType="default" />
+            <TextInput
+              value={typedText}
+              onChangeText={handleTextTyped}
+              placeholder="Search a pokémon"
+              keyboardType="web-search"
+              className="w-full"
+            />
           </View>
           <TouchableOpacity
             activeOpacity={0.7}
@@ -66,39 +102,33 @@ export function HomeScreen() {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        className="w-full"
-        contentContainerStyle={{
-          alignItems: "center",
-          justifyContent: "center",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          paddingBottom: 80,
-        }}
-      >
-        {pokemons?.map((pokemon: any) => (
-          <PokemonCard
-            pokemon={{
-              ...pokemon,
-              sprite: pokemon.sprites.other["official-artwork"].front_default,
+
+      {isLoading ? (
+        <ActivityIndicator size="large" color="#6b7280" className="flex-1" />
+      ) : (
+        <>
+          <FlatList
+            data={pokemons}
+            renderItem={({ item }) => (
+              <PokemonCard
+                pokemon={{
+                  ...item,
+                  sprite: item.sprites?.other["official-artwork"].front_default,
+                }}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+            contentContainerStyle={{
+              alignItems: "center",
+              justifyContent: "center",
+              paddingBottom: 80,
             }}
-            key={pokemon.name}
+            numColumns={2}
           />
-        ))}
-      </ScrollView>
-      <View className="absolute right-4 bottom-4 z-50">
-        <TouchableOpacity
-          activeOpacity={0.899}
-          className="flex-row items-center justify-evenly h-16 w-44 rounded-2xl bg-yellow-400 p-5 pb-5"
-        >
-          <Image
-            source={require("../../assets/random.png")}
-            className="w-7 h-7"
-          />
-          <Text className="font-medium text-base">Random</Text>
-        </TouchableOpacity>
-      </View>
+
+          <RandomButton />
+        </>
+      )}
     </>
   );
 }
