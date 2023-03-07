@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 
 interface PokemonInterface {
   name: string;
@@ -7,17 +7,6 @@ interface PokemonInterface {
 
 interface PokemonsWithNameAndUrlResponse {
   results: [PokemonInterface];
-}
-
-interface allPokemonsInterface {
-  id: number;
-  name: string;
-  height: string;
-  baseExperience: number;
-  stats: any[];
-  types: any[];
-  moves: any[];
-  sprite: string;
 }
 
 export const server = axios.create({
@@ -49,6 +38,19 @@ export async function getPokemonsWithLimit(limit: string) {
 
     return pokemons;
   } catch (error) {
-    console.error(error);
+    console.log(error);
+  }
+}
+
+export async function searchPokemon(typedValue: string) {
+  try {
+    let pokemons: any[];
+    const pokemonSearchResult = await server.get(`/pokemon/${typedValue}`);
+
+    pokemons = pokemonSearchResult.data;
+
+    return pokemons;
+  } catch (error) {
+    console.log(error);
   }
 }
