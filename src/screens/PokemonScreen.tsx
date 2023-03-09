@@ -17,7 +17,7 @@ export function PokemonScreen() {
     "#ffff";
 
   return (
-    <ScrollView className="flex-1">
+    <ScrollView className="flex-1 w-full" showsVerticalScrollIndicator={false}>
       <View className="flex-1 flex-shrink">
         <LinearGradient
           colors={[pokemonTypeColor, pokemonTypeColor, "#ffffff"]}

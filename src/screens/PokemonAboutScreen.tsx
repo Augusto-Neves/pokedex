@@ -1,10 +1,9 @@
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
-import { PokemonTypes, StatInterface } from "../@types/pokemonProps";
+import { View, Text, ActivityIndicator, ScrollView } from "react-native";
 import { server } from "../service/axios";
-import { Abilities } from "../@types/pokemonAbilityType";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
+import { ParamsProps } from "../@types/pokemonParamsProps";
 
 // Pokemons Types Icons
 import GrassIcon from "../assets/typeIcons/grass.svg";
@@ -26,25 +25,16 @@ import DragonIcon from "../assets/typeIcons/dragon.svg";
 import DarkIcon from "../assets/typeIcons/dark.svg";
 import SteelIcon from "../assets/typeIcons/steel.svg";
 
-interface ParamsProps {
-  id: number;
-  name: string;
-  height: number;
-  weight: number;
-  baseExperience: number;
-  abilities: Abilities[];
-  stats: StatInterface[];
-  types: PokemonTypes[];
-  sprite: string;
-}
-
 export function PokemonAboutScreen() {
   const [pokemonDescription, setPokemonDescription] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const route = useRoute();
   const pokemon = route.params as ParamsProps;
-  const uniquePokemonAbilities = [...new Set(pokemon.abilities)];
+  const pokemonAbilities = pokemon.abilities.map(
+    (data: any) => data.ability.name
+  );
+  const uniquePokemonAbilities = [...new Set(pokemonAbilities)];
 
   function returnPokemonTypeIcon(pokemonType: string) {
     const pokemonTypes = {
@@ -76,6 +66,7 @@ export function PokemonAboutScreen() {
     (async () => {
       try {
         setIsLoading(true);
+        const pokemonName = capitalizeFirstLetter(pokemon.name);
         const getPokemonDescription = await server.get(
           `/pokemon-species/${pokemon.id}`
         );
@@ -84,7 +75,13 @@ export function PokemonAboutScreen() {
             (p: any) => p.language.name === "en"
           );
 
-        setPokemonDescription(description[0].flavor_text);
+        if (description.length === 0) {
+          const placeholderDescription = `Meet ${pokemonName}, a powerful Pokémon. ${pokemonName} is a formidable opponent in battles.`;
+
+          setPokemonDescription(placeholderDescription);
+        } else {
+          setPokemonDescription(description[0].flavor_text);
+        }
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
@@ -102,12 +99,15 @@ export function PokemonAboutScreen() {
   }
 
   return (
-    <View className="flex-1 bg-white items-center gap-5">
+    <ScrollView
+      className="flex-1 gap-5"
+      contentContainerStyle={{ alignItems: "center" }}
+    >
       <Text className=" text-base font-normal text-gray-600 mt-3  mb-6 p-6 leading-6 ">
         {pokemonDescription.replace(/[\n\f]/g, " ")}
       </Text>
 
-      <View className="flex-row gap-6 items-center justify-center bg-gray-100 rounded-2xl w-80 h-28 p-6">
+      <View className="flex-row gap-6 items-center justify-center bg-gray-100 rounded-2xl w-80 h-28 p-6 mb-12">
         <View className="flex-1 items-center justify-center">
           <Text className="text-zinc-800 text-base text-center tracking-[0.15px] font-medium">
             {(pokemon.weight / 10).toFixed(2).replace(".", ",")} kg
@@ -149,10 +149,10 @@ export function PokemonAboutScreen() {
         <View className="flex-1 items-center justify-center">
           {uniquePokemonAbilities.map((ability: any) => (
             <Text
-              key={ability.ability.name}
+              key={ability}
               className="text-zinc-800 text-base text-center tracking-[0.15px] font-medium"
             >
-              {capitalizeFirstLetter(ability.ability.name)}
+              {capitalizeFirstLetter(ability)}
             </Text>
           ))}
           <Text className="text-gray-400 text-xs font-normal leading-4 tracking-wider mt-1">
@@ -160,6 +160,6 @@ export function PokemonAboutScreen() {
           </Text>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
