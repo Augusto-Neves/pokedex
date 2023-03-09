@@ -38,7 +38,11 @@ export function PokemonScreenTopTab({ pokemon }: PokemonProps) {
       }}
       style={{
         flex: 1,
-        minHeight: 500,
+        minHeight: 600,
+      }}
+      sceneContainerStyle={{
+        backgroundColor: "#ffffff",
+        flex: 1,
       }}
     >
       <Tab.Screen
@@ -51,12 +55,16 @@ export function PokemonScreenTopTab({ pokemon }: PokemonProps) {
         name="Stats"
         options={{ title: "Stats" }}
         component={PokemonStatsScreen}
+        initialParams={pokemon}
       />
+
       <Tab.Screen
         name="Moves"
         options={{ title: "Moves" }}
         component={PokemonMovesScreen}
+        initialParams={pokemon}
       />
+
       <Tab.Screen
         name="Evolutions"
         options={{ title: "Evolutions" }}
