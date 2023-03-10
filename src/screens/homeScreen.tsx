@@ -12,11 +12,13 @@ import { PokemonCard } from "../components/PokemonCard";
 import { getPokemonsWithLimit, searchPokemon, server } from "../service/axios";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { RandomButton } from "../components/RandomButton";
+import { useNavigation } from "@react-navigation/native";
 
 export function HomeScreen() {
   const [pokemons, setPokemons] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [typedText, setTypedText] = useState("");
+  const navigation = useNavigation();
 
   async function getInitialPokemons() {
     try {
@@ -57,6 +59,12 @@ export function HomeScreen() {
     setTypedText(text);
   }
 
+  function handlePokemonNavigation(pokemon: any) {
+    navigation.navigate("Pokemon", {
+      pokemon,
+    });
+  }
+  
   useEffect(() => {
     if (typedText === "") {
       getInitialPokemons();
@@ -115,6 +123,7 @@ export function HomeScreen() {
                   ...item,
                   sprite: item.sprites?.other["official-artwork"].front_default,
                 }}
+                onPress={handlePokemonNavigation}
               />
             )}
             keyExtractor={(item) => item.id}
