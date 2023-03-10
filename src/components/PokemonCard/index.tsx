@@ -6,7 +6,6 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import { PokemonProps } from "../../@types/pokemonProps";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import { addingPadToString } from "../../utils/addingPadToString";
@@ -31,9 +30,14 @@ import DragonIcon from "../../assets/typeIcons/dragon.svg";
 import DarkIcon from "../../assets/typeIcons/dark.svg";
 import SteelIcon from "../../assets/typeIcons/steel.svg";
 
+interface PokemonCardProps extends PokemonProps {
+  onPress?: (pokemon: any) => void | (() => void);
+}
 
-export function PokemonCard({ pokemon }: PokemonProps) {
-  const navigation = useNavigation();
+export function PokemonCard(
+  this: any,
+  { pokemon, onPress, ...rest }: PokemonCardProps
+) {
   const pokemonFirstType = pokemon.types[0].type.name;
 
   function returnPokemonTypeIcon(pokemonType: string) {
@@ -62,16 +66,11 @@ export function PokemonCard({ pokemon }: PokemonProps) {
     return (pokemonTypes as any)[pokemonType] || pokemonTypes.default;
   }
 
-  function handlePokemonNavigation() {
-    navigation.navigate("Pokemon", {
-      pokemon,
-    });
-  }
-
   return (
     <TouchableOpacity
+      {...rest}
       activeOpacity={0.7}
-      onPress={handlePokemonNavigation}
+      onPress={onPress?.bind(this, pokemon)}
       className={clsx(
         "w-[170px] h-[115px] items-center justify-center rounded-lg space-x-2  mx-3 my-3",
         {
