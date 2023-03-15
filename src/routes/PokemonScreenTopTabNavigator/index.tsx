@@ -69,6 +69,7 @@ export function PokemonScreenTopTab({ pokemon }: PokemonProps) {
         name="Evolutions"
         options={{ title: "Evolutions" }}
         component={PokemonEvolutionsScreen}
+        initialParams={pokemon}
       />
     </Tab.Navigator>
   );
