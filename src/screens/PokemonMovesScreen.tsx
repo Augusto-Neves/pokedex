@@ -6,7 +6,7 @@ import { MoveRow } from "../components/MoveRow";
 export function PokemonMovesScreen() {
   const route = useRoute();
   const pokemon = route.params as ParamsProps;
-  const orderedMoves = pokemon.moves.sort((a, b) =>
+  const orderedMoves = [...pokemon.moves].sort((a, b) =>
     a.move.name.localeCompare(b.move.name)
   );
 
