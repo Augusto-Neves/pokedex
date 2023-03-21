@@ -24,7 +24,11 @@ export function PokemonScreen() {
           className="items-center justify-center p-8"
         >
           <SafeAreaView className="items-center justify-center">
-            <Header title={receivedData.pokemon.id} />
+            <Header
+              title={receivedData.pokemon.id}
+              pokemonId={receivedData.pokemon.id}
+              hasFavoriteButton
+            />
             <Image
               source={{
                 uri: receivedData.pokemon.sprite,
