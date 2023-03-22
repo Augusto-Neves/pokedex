@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PokemonCard } from "../components/PokemonCard";
-import { getPokemonsWithLimit, searchPokemon, server } from "../service/axios";
+import { getPokemonsWithLimit, server } from "../service/axios";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { RandomButton } from "../components/RandomButton";
 import { useNavigation } from "@react-navigation/native";
@@ -64,7 +64,7 @@ export function HomeScreen() {
       pokemon,
     });
   }
-  
+
   useEffect(() => {
     if (typedText === "") {
       getInitialPokemons();
@@ -82,7 +82,7 @@ export function HomeScreen() {
   return (
     <>
       <SafeAreaView>
-        <View className="space-x-10 pr-5">
+        <View className="space-x-10 mt-8 pr-5">
           <Text className="text-gray-500 text-4xl font-normal ml-10 mt-3 mb-1">
             Pokédex
           </Text>
