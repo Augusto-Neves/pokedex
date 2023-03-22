@@ -54,3 +54,30 @@ export async function searchPokemon(typedValue: string) {
     console.log(error);
   }
 }
+
+export async function getFavoritePokemons(pokemonsIds: any[]) {
+  try {       
+    let favoritesPokemons: any[];
+    let favoritesPokemonsEndPoints: string[] = [];
+
+    const sortedPokemonsId = [...pokemonsIds].sort((a, b) => a - b);
+
+    sortedPokemonsId.forEach((id) => {
+      const endPoint = `https://pokeapi.co/api/v2/pokemon/${id}`;
+      favoritesPokemonsEndPoints?.push(endPoint);
+    });
+
+    const allFavoritePokemonsData = await axios.all(
+      favoritesPokemonsEndPoints.map(async (endPoint) => {
+        const response = await axios.get(endPoint);
+        return response.data;
+      })
+    );
+
+    favoritesPokemons = allFavoritePokemonsData;
+
+    return favoritesPokemons;
+  } catch (error) {
+    console.log(error);
+  }
+}
