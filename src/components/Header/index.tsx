@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { TouchableOpacity, View, Text } from "react-native";
 import { addingPadToString } from "../../utils/addingPadToString";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 interface HeaderProps {
   title: string | number;
   pokemonId?: string | number;
@@ -20,7 +20,7 @@ export function Header({
   const [favoriteList, setFavoriteList] = useState<any[]>([]);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const getFavoriteList = async () => {
+  const getFavoriteList = useCallback(async () => {
     if (hasFavoriteButton) {
       try {
         const jsonValue = await AsyncStorage.getItem("@favorite_pokemon");
@@ -33,7 +33,7 @@ export function Header({
         console.log(error);
       }
     }
-  };
+  }, [isFavorite]);
 
   const addToFavoriteList = async () => {
     try {
@@ -54,6 +54,11 @@ export function Header({
       const newFavoriteList = favoriteList.filter(
         (id: number) => id !== pokemonId
       );
+      await AsyncStorage.setItem(
+        "@favorite_pokemon",
+        JSON.stringify(newFavoriteList)
+      );
+
       setFavoriteList(newFavoriteList);
     } catch (error) {
       console.log(error);
