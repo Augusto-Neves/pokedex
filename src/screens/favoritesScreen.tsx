@@ -1,14 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { View, Text, ActivityIndicator, FlatList } from "react-native";
+import { View, Text, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PokemonCard } from "../components/PokemonCard";
 import { getFavoritePokemons } from "../service/axios";
 
 export function FavoriteScreen() {
   const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(true);
   const [favoritePokemonsIds, setFavoritePokemonsIds] = useState<any[]>([]);
   const [favoritePokemons, setFavoritePokemons] = useState<any>([]);
 
@@ -29,10 +28,8 @@ export function FavoriteScreen() {
 
             setFavoritePokemonsIds(parsedValue);
             setFavoritePokemons(favoritePokemonsData);
-            setIsLoading(false);
           }
         } catch (error) {
-          setIsLoading(false);
           console.log(error);
         }
       };
@@ -54,31 +51,35 @@ export function FavoriteScreen() {
           Favorite numbers: {favoritePokemonsIds.length}
         </Text>
       </View>
-      {isLoading ? (
-        <ActivityIndicator size="large" color="#6b7280" className="flex-1" />
+      {favoritePokemonsIds.length === 0 ? (
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-gray-400 text-base mb-3">
+            You don't have any favorite Pokémon.
+          </Text>
+          <Text className="text-gray-400 text-base mb-3">
+            Favorite a Pokémon and it will appears here.
+          </Text>
+        </View>
       ) : (
-        <>
-          <FlatList
-            data={favoritePokemons}
-            renderItem={({ item }) => (
-              <PokemonCard
-                pokemon={{
-                  ...item,
-                  sprite:
-                    item.sprites?.other["official-artwork"]?.front_default,
-                }}
-                onPress={handlePokemonNavigation}
-              />
-            )}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={{
-              alignItems: "center",
-              justifyContent: "center",
-              paddingBottom: 80,
-            }}
-            numColumns={2}
-          />
-        </>
+        <FlatList
+          data={favoritePokemons}
+          renderItem={({ item }) => (
+            <PokemonCard
+              pokemon={{
+                ...item,
+                sprite: item.sprites?.other["official-artwork"]?.front_default,
+              }}
+              onPress={handlePokemonNavigation}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{
+            alignItems: "center",
+            justifyContent: "center",
+            paddingBottom: 80,
+          }}
+          numColumns={2}
+        />
       )}
     </SafeAreaView>
   );
