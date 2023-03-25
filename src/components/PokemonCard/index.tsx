@@ -6,9 +6,9 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { PokemonProps } from "../../@types/pokemonProps";
 import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 import { addingPadToString } from "../../utils/addingPadToString";
+import { ParamsProps } from "../../@types/pokemonParamsProps";
 
 // Pokemons Types Icons
 import GrassIcon from "../../assets/typeIcons/grass.svg";
@@ -30,7 +30,8 @@ import DragonIcon from "../../assets/typeIcons/dragon.svg";
 import DarkIcon from "../../assets/typeIcons/dark.svg";
 import SteelIcon from "../../assets/typeIcons/steel.svg";
 
-interface PokemonCardProps extends PokemonProps {
+interface PokemonCardProps {
+  pokemon: ParamsProps | any;
   onPress?: (pokemon: any) => void | (() => void);
 }
 
@@ -38,7 +39,7 @@ export function PokemonCard(
   this: any,
   { pokemon, onPress, ...rest }: PokemonCardProps
 ) {
-  const pokemonFirstType = pokemon.types[0].type.name;
+  const pokemonFirstType = pokemon?.types[0].type.name;
 
   function returnPokemonTypeIcon(pokemonType: string) {
     const pokemonTypes = {
@@ -96,24 +97,27 @@ export function PokemonCard(
       )}
     >
       <View className="flex-row justify-between items-center mx-3 mt-3">
-        <Text className="font-semibold text-white text-base flex-1">
-          {capitalizeFirstLetter(pokemon.name)}
+        <Text
+          className="font-semibold text-white text-base flex-1"
+          numberOfLines={1}
+        >
+          {capitalizeFirstLetter(pokemon?.name)}
         </Text>
         <Text className="font-semibold text-white text-base">
-          #{addingPadToString(3, pokemon.id)}
+          #{addingPadToString(3, pokemon?.id)}
         </Text>
       </View>
       <View className="flex-row items-center justify-between ">
         <View className="flex-1 gap-1">
-          {pokemon.types.map((pokemonType: any) => (
+          {pokemon?.types.map((pokemonType: any) => (
             <View
-              key={pokemonType.type.name}
+              key={pokemonType?.type.name}
               className="flex-row items-center justify-start  gap-2 bg-[#28314133] rounded-3xl"
             >
               <View className="flex-row items-center my-1">
-                {returnPokemonTypeIcon(pokemonType.type.name)}
+                {returnPokemonTypeIcon(pokemonType?.type.name)}
                 <Text className="text-white ml-1 text-center">
-                  {capitalizeFirstLetter(pokemonType.type.name)}
+                  {capitalizeFirstLetter(pokemonType?.type.name)}
                 </Text>
               </View>
             </View>
@@ -126,7 +130,7 @@ export function PokemonCard(
         >
           <Image
             source={{
-              uri: pokemon.sprite,
+              uri: pokemon?.sprite,
             }}
             className="h-14 w-14 mr-1"
           />
