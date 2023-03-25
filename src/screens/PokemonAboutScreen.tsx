@@ -107,7 +107,7 @@ export function PokemonAboutScreen() {
         {pokemonDescription.replace(/[\n\f]/g, " ")}
       </Text>
 
-      <View className="flex-row gap-6 items-center justify-center bg-gray-100 rounded-2xl w-80 h-28 p-6 mb-12">
+      <View className="flex-row gap-6 items-center justify-center bg-gray-100 rounded-2xl w-80 h-32 p-6 mb-12">
         <View className="flex-1 items-center justify-center">
           <Text className="text-zinc-800 text-base text-center tracking-[0.15px] font-medium">
             {(pokemon.weight / 10).toFixed(2).replace(".", ",")} kg
@@ -129,7 +129,7 @@ export function PokemonAboutScreen() {
         </View>
       </View>
 
-      <View className="flex-row gap-6 items-center justify-center bg-gray-100 rounded-2xl w-80 h-28 p-6">
+      <View className="flex-row gap-6 items-center justify-center bg-gray-100 rounded-2xl w-80 h-32 p-6">
         <View className="flex-1 items-center justify-center">
           <View className="flex-row justify-center items-center gap-2">
             {pokemon.types.map((pokemonType) => (
