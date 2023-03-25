@@ -45,7 +45,9 @@ export async function getPokemonsWithLimit(limit: string) {
 export async function searchPokemon(typedValue: string) {
   try {
     let pokemons: any[];
-    const pokemonSearchResult = await server.get(`/pokemon/${typedValue}`);
+    const pokemonSearchResult = await server.get(
+      `/pokemon/${typedValue.toLowerCase()}`
+    );
 
     pokemons = pokemonSearchResult.data;
 
@@ -56,7 +58,7 @@ export async function searchPokemon(typedValue: string) {
 }
 
 export async function getFavoritePokemons(pokemonsIds: any[]) {
-  try {       
+  try {
     let favoritesPokemons: any[];
     let favoritesPokemonsEndPoints: string[] = [];
 
