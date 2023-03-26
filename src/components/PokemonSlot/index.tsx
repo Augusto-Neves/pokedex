@@ -23,7 +23,7 @@ interface PokemonSlotProps {
 
 export function PokemonSlot({ pokemon, setPokemon }: PokemonSlotProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [searchText, setSearchText] = useState("");
+  const [typedText, setTypedText] = useState("");
   const modalizeRef = useRef<Modalize>(null);
 
   const getPokemon = useCallback(
@@ -44,6 +44,7 @@ export function PokemonSlot({ pokemon, setPokemon }: PokemonSlotProps) {
             } as unknown as ParamsProps);
 
             setIsLoading(false);
+            setTypedText("")
           }
         } catch (error) {
           setIsLoading(false);
@@ -55,11 +56,11 @@ export function PokemonSlot({ pokemon, setPokemon }: PokemonSlotProps) {
         setPokemon(null);
       }
     },
-    [searchText]
+    [typedText]
   );
 
   async function handleTextTyped(text: string) {
-    setSearchText(text);
+    setTypedText(text);
     getPokemon(text);
   }
 
@@ -115,7 +116,7 @@ export function PokemonSlot({ pokemon, setPokemon }: PokemonSlotProps) {
               <View className="flex-row space-x-2 mt-3 mx-10 p-3 rounded-lg border border-gray-200 flex-1 items-center">
                 <MaterialIcons name="search" size={20} />
                 <TextInput
-                  value={searchText}
+                  value={typedText}
                   onChangeText={handleTextTyped}
                   placeholder="Search a pokémon"
                   keyboardType="web-search"
