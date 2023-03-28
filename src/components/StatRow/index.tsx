@@ -20,9 +20,10 @@ interface PokemonProps {
 interface StatRowProps {
   statsName: string;
   pokemon: PokemonProps;
+  secondPokemon?: PokemonProps;
 }
 
-export function StatRow({ statsName, pokemon }: StatRowProps) {
+export function StatRow({ statsName, pokemon, secondPokemon }: StatRowProps) {
   const statsTitles = {
     hp: "HP",
     attack: "Attack",
@@ -32,6 +33,7 @@ export function StatRow({ statsName, pokemon }: StatRowProps) {
     speed: "Speed",
   };
   const rowTitle = (statsTitles as any)[statsName];
+  
   return (
     <View className="flex-row justify-evenly items-center px-9 flex-1">
       <View className="flex-1">
@@ -40,13 +42,19 @@ export function StatRow({ statsName, pokemon }: StatRowProps) {
         </Text>
       </View>
 
-      <Text className="mr-9 -ml-36 text-zinc-800 text-base">
+      <Text className="mr-9 -ml-28 text-zinc-800 text-base">
         {returnStatsValue(statsName, pokemon)}
       </Text>
       <StatsBar
         pokemonType={pokemon.types[0].type.name}
         stat={returnStatsValue(statsName, pokemon)}
       />
+
+      {secondPokemon && (
+        <Text className="text-zinc-800 text-base ml-5">
+          {returnStatsValue(statsName, secondPokemon)}
+        </Text>
+      )}
     </View>
   );
 }
