@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { ParamsProps } from "../../@types/pokemonParamsProps";
 import { searchPokemon } from "../../service/axios";
@@ -14,6 +15,8 @@ export function RandomCompareButton({
   setFirstPokemon,
   setSecondPokemon,
 }: IRandomCompareButton) {
+  const [isDisabled, setIsDisabled] = useState(false);
+
   async function handleRandomSetPokemons() {
     const minValue = 1;
     const maxValue = 1008;
@@ -35,6 +38,8 @@ export function RandomCompareButton({
       ).toFixed();
     }
 
+    setIsDisabled(true);
+
     const firstPromise = (await searchPokemon(firstRandomNumber)) as any;
     const secondPromise = (await searchPokemon(secondRandomNumber)) as any;
 
@@ -49,8 +54,10 @@ export function RandomCompareButton({
           sprite:
             secondPokemon.sprites?.other["official-artwork"].front_default,
         });
+        setIsDisabled(false);
       })
       .catch((error) => {
+        setIsDisabled(false);
         console.log(error);
       });
   }
@@ -60,6 +67,7 @@ export function RandomCompareButton({
       activeOpacity={0.7}
       onPress={handleRandomSetPokemons}
       className="-my-12 bg-gray-100 h-20 w-20 items-center justify-center rounded-full z-10"
+      disabled={isDisabled}
     >
       <DiceSVG height={50} width={50} />
     </TouchableOpacity>
