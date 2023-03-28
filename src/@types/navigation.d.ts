@@ -5,9 +5,10 @@ export declare global {
     interface RootParamList {
       Home: undefined;
       Pokemon: PokemonProps;
+      ComparatorResult: any;
       Comparator: undefined;
       Quiz: undefined;
-      Favorites: undefined;      
+      Favorites: undefined;
     }
   }
 }

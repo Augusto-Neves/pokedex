@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,9 +8,14 @@ import { PokemonSlot } from "../components/PokemonSlot";
 import { RandomCompareButton } from "../components/RandomCompareButton";
 
 export function ComparatorScreen() {
+  const navigation = useNavigation();
   const [firstPokemon, setFirstPokemon] = useState<ParamsProps | null>(null);
   const [secondPokemon, setSecondPokemon] = useState<ParamsProps | null>(null);
   const isDisabled = !firstPokemon || !secondPokemon;
+
+  function navigateToComparatorResult() {
+    navigation.navigate("ComparatorResult", { firstPokemon, secondPokemon });
+  }
 
   return (
     <SafeAreaView>
@@ -34,6 +40,7 @@ export function ComparatorScreen() {
           <PokemonSlot pokemon={secondPokemon} setPokemon={setSecondPokemon} />
 
           <TouchableOpacity
+            onPress={navigateToComparatorResult}
             activeOpacity={0.7}
             className={clsx(
               "flex-row items-center justify-evenly h-11 w-full rounded-2xl bg-yellow-400 m-6",
