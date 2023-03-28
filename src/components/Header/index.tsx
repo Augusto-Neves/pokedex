@@ -5,6 +5,7 @@ import { TouchableOpacity, View, Text } from "react-native";
 import { addingPadToString } from "../../utils/addingPadToString";
 import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
+import { capitalizeFirstLetter } from "../../utils/capitalizeFirstLetter";
 interface HeaderProps {
   title: string | number;
   pokemonId?: string | number;
@@ -92,10 +93,16 @@ export function Header({
           color={colors.zinc[800]}
         />
       </TouchableOpacity>
-      <Text className="text-zinc-800 text-center text-2xl font-normal leading-7 flex-1">
-        #{addingPadToString(3, title)}
-      </Text>
-      {hasFavoriteButton && (
+      {typeof title === "number" ? (
+        <Text className="text-zinc-800 text-center text-2xl font-normal leading-7 flex-1">
+          #{addingPadToString(3, title)}
+        </Text>
+      ) : (
+        <Text className="text-zinc-800 text-center text-2xl font-normal leading-7 flex-1">
+          {capitalizeFirstLetter(title)}
+        </Text>
+      )}
+      {hasFavoriteButton ? (
         <TouchableOpacity activeOpacity={0.7} onPress={handleFavorite}>
           <Ionicons
             name={isFavorite ? "ios-heart" : "ios-heart-outline"}
@@ -103,6 +110,8 @@ export function Header({
             color={colors.zinc[800]}
           />
         </TouchableOpacity>
+      ) : (
+        <View className="h-6 w-6" />
       )}
     </View>
   );
