@@ -44,7 +44,6 @@ export function PokemonSlot({ pokemon, setPokemon }: PokemonSlotProps) {
             } as unknown as ParamsProps);
 
             setIsLoading(false);
-            setTypedText("")
           }
         } catch (error) {
           setIsLoading(false);
@@ -70,6 +69,7 @@ export function PokemonSlot({ pokemon, setPokemon }: PokemonSlotProps) {
 
   function onClose() {
     modalizeRef.current?.close();
+    setTypedText("");
   }
 
   return (
