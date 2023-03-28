@@ -35,20 +35,34 @@ export function PokemonEvolutionsScreen() {
 
   useEffect(() => {
     (async () => {
-      const specieResponse = await server(`pokemon-species/${pokemon.id}`);
-      const evolutionUrl = specieResponse.data?.evolution_chain?.url;
+      try {
+        const specieResponse = await server(`pokemon-species/${pokemon.id}`);
+        const evolutionUrl = specieResponse.data?.evolution_chain?.url;
 
-      const evolutionChainResponse = await server(evolutionUrl);
-
-      const chain = evolutionChainResponse.data as EvolutionChainResponse;
-
-      setEvolutionChain(chain);
+        if (evolutionUrl) {
+          const evolutionChainResponse = await server(evolutionUrl);
+          const chain = evolutionChainResponse.data as EvolutionChainResponse;
+          setEvolutionChain(chain);
+        } else {
+          setEvolutionChain({
+            chain: {
+              species: {
+                name: pokemon.name,
+                url: `https://pokeapi.co/api/v2/pokemon-species/${pokemon.id}`,
+              },
+              evolves_to: [],
+            },
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
     })();
   }, []);
 
   return (
     <View className="flex-1 justify-start mt-14 px-6">
-      {evolutionChain?.chain.species && (
+      {evolutionChain?.chain?.species && (
         <>
           <EvolutionCard
             species={evolutionChain.chain.species}
