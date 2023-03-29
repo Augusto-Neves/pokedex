@@ -1,12 +1,14 @@
 import { useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Text, Image, ScrollView, Animated } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PokemonProps } from "../@types/pokemonProps";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
 import { pokemonTypesColors } from "../utils/colors";
 import { Header } from "../components/Header";
 import { PokemonScreenTopTab } from "../routes/PokemonScreenTopTabNavigator";
+import { useRef, useEffect } from "react";
+import { fadeInAnimation } from "../utils/fadeInAnimation";
 
 export function PokemonScreen() {
   const { params } = useRoute();
@@ -15,9 +17,18 @@ export function PokemonScreen() {
   const pokemonTypeColor =
     (pokemonTypesColors as any)[receivedData.pokemon.types[0].type.name] ||
     "#ffff";
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    fadeInAnimation(fadeAnim);
+  }, []);
 
   return (
-    <ScrollView className="flex-1 w-full" showsVerticalScrollIndicator={false}>
+    <Animated.ScrollView
+      className="flex-1 w-full"
+      showsVerticalScrollIndicator={false}
+      style={{ opacity: fadeAnim }}
+    >
       <View className="flex-1 flex-shrink">
         <LinearGradient
           colors={[pokemonTypeColor, pokemonTypeColor, "#ffffff"]}
@@ -49,6 +60,6 @@ export function PokemonScreen() {
 
         <PokemonScreenTopTab pokemon={receivedData.pokemon} />
       </View>
-    </ScrollView>
+    </Animated.ScrollView>
   );
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   FlatList,
+  Animated,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PokemonCard } from "../components/PokemonCard";
@@ -13,12 +14,14 @@ import { getPokemonsWithLimit, server } from "../service/axios";
 import { MaterialIcons, Feather } from "@expo/vector-icons";
 import { RandomButton } from "../components/RandomButton";
 import { useNavigation } from "@react-navigation/native";
+import { fadeInAnimation } from "../utils/fadeInAnimation";
 
 export function HomeScreen() {
   const [pokemons, setPokemons] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [typedText, setTypedText] = useState("");
   const navigation = useNavigation();
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   async function getInitialPokemons() {
     try {
@@ -66,13 +69,13 @@ export function HomeScreen() {
   }
 
   useEffect(() => {
-    if (typedText === "") {
-      getInitialPokemons();
-    }
-  }, [typedText]);
+    fadeInAnimation(fadeAnim);
+  }, []);
 
   useEffect(() => {
-    if (typedText) {
+    if (typedText === "") {
+      getInitialPokemons();
+    } else if (typedText) {
       handleSearch();
     } else {
       getInitialPokemons();
@@ -80,7 +83,12 @@ export function HomeScreen() {
   }, [typedText]);
 
   return (
-    <>
+    <Animated.View
+      style={{
+        opacity: fadeAnim,
+      }}
+      className="flex-1"
+    >
       <SafeAreaView>
         <View className="space-x-10 mt-8 pr-5">
           <Text className="text-gray-500 text-4xl font-normal ml-10 mt-3 mb-1">
@@ -138,6 +146,6 @@ export function HomeScreen() {
           <RandomButton />
         </>
       )}
-    </>
+    </Animated.View>
   );
 }
