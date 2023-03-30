@@ -1,4 +1,5 @@
-import { useNavigation, useRoute } from "@react-navigation/native";
+import * as Animatable from "react-native-animatable";
+import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -46,41 +47,43 @@ export function ComparatorResultScreen() {
   }, []);
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
-      <SafeAreaView>
-        <View className="py-5 px-6">
-          <Header title="Comparator" />
-        </View>
-      </SafeAreaView>
+    <Animatable.View animation="bounceInLeft">
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView>
+          <View className="py-5 px-6">
+            <Header title="Comparator" />
+          </View>
+        </SafeAreaView>
 
-      <View className="flex-row gap-5 items-center justify-center mt-5">
-        <View>
-          <PokemonComparatorSlot pokemon={firstPokemon} />
+        <View className="flex-row gap-5 items-center justify-center mt-5">
+          <View>
+            <PokemonComparatorSlot pokemon={firstPokemon} />
+          </View>
+          <View>
+            <PokemonComparatorSlot pokemon={secondPokemon} />
+          </View>
         </View>
-        <View>
-          <PokemonComparatorSlot pokemon={secondPokemon} />
-        </View>
-      </View>
 
-      <View className="w-80 p-6 mt-10">
-        {isDrawn ? (
-          <Text className="text-2xl leading-7">Draw!</Text>
-        ) : (
-          <Text className="text-2xl leading-7">
-            {capitalizeFirstLetter(winnerPokemon.name)} wins!
-          </Text>
-        )}
-      </View>
-
-      {firstPokemon.stats.map((data) => (
-        <View className="flex-1 my-6" key={data.stat.name}>
-          <StatRow
-            pokemon={winnerPokemon}
-            secondPokemon={defeatedPokemon}
-            statsName={data.stat.name}
-          />
+        <View className="w-80 p-6 mt-10">
+          {isDrawn ? (
+            <Text className="text-2xl leading-7">Draw!</Text>
+          ) : (
+            <Text className="text-2xl leading-7">
+              {capitalizeFirstLetter(winnerPokemon.name)} wins!
+            </Text>
+          )}
         </View>
-      ))}
-    </ScrollView>
+
+        {firstPokemon.stats.map((data) => (
+          <View className="flex-1 my-6" key={data.stat.name}>
+            <StatRow
+              pokemon={winnerPokemon}
+              secondPokemon={defeatedPokemon}
+              statsName={data.stat.name}
+            />
+          </View>
+        ))}
+      </ScrollView>
+    </Animatable.View>
   );
 }
