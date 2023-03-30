@@ -1,3 +1,4 @@
+import * as Animatable from "react-native-animatable";
 import { useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { View, Text, Image, ScrollView, Animated } from "react-native";
@@ -24,11 +25,7 @@ export function PokemonScreen() {
   }, []);
 
   return (
-    <Animated.ScrollView
-      className="flex-1 w-full"
-      showsVerticalScrollIndicator={false}
-      style={{ opacity: fadeAnim }}
-    >
+    <ScrollView className="flex-1 w-full" showsVerticalScrollIndicator={false}>
       <View className="flex-1 flex-shrink">
         <LinearGradient
           colors={[pokemonTypeColor, pokemonTypeColor, "#ffffff"]}
@@ -40,12 +37,14 @@ export function PokemonScreen() {
               pokemonId={receivedData.pokemon.id}
               hasFavoriteButton
             />
-            <Image
+            <Animatable.Image
               source={{
                 uri: receivedData.pokemon.sprite,
               }}
               className="h-64 w-64"
               resizeMode="contain"
+              animation="zoomIn"
+              iterationDelay={500}
             />
           </SafeAreaView>
           <View>
@@ -60,6 +59,6 @@ export function PokemonScreen() {
 
         <PokemonScreenTopTab pokemon={receivedData.pokemon} />
       </View>
-    </Animated.ScrollView>
+    </ScrollView>
   );
 }
