@@ -9,6 +9,7 @@ export declare global {
       Comparator: undefined;
       Quiz: undefined;
       Favorites: undefined;
+      Game: undefined;
     }
   }
 }
