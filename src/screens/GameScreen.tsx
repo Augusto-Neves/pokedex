@@ -60,8 +60,6 @@ export function GameScreen() {
             .map((result: any) => result.name)
             .slice(0, 2);
           const arrayToBeShuffled = new Set([...optionsName, name]);
-          console.log(arrayToBeShuffled);
-
           const shuffledOptions = shuffleArray([...arrayToBeShuffled]);
 
           setOptions(shuffledOptions);
