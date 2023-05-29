@@ -1,10 +1,11 @@
-import { HomeScreen } from "../../screens/HomeScreen";
+import { HomeScreen } from "../../screens/homeScreen"
 import { MaterialIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { ComparatorScreen } from "../../screens/ComparatorScreen";
-import { FavoriteScreen } from "../../screens/FavoritesScreen";
-import { QuizScreen } from "../../screens/QuizScreen";
+import { ComparatorScreen } from "../../screens/comparatorScreen";
+import { FavoriteScreen } from "../../screens/favoritesScreen";
+import { QuizScreen } from "../../screens/quizScreen";
 import { Host } from "react-native-portalize";
+import { Platform } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -45,7 +46,7 @@ export function HomeTabScreen() {
           },
           tabBarStyle: {
             padding: 10,
-            height: 70,
+            height: Platform.OS === 'ios' ? 90 : 70,
           },
         })}
       >

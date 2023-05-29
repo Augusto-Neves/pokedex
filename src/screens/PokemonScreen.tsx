@@ -1,7 +1,7 @@
 import * as Animatable from "react-native-animatable";
 import { useRoute } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { View, Text, Image, ScrollView, Animated } from "react-native";
+import { View, Text, ScrollView, Animated, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PokemonProps } from "../@types/pokemonProps";
 import { capitalizeFirstLetter } from "../utils/capitalizeFirstLetter";
@@ -25,7 +25,11 @@ export function PokemonScreen() {
   }, []);
 
   return (
-    <ScrollView className="flex-1 w-full" showsVerticalScrollIndicator={false}>
+    <ScrollView
+      className="flex-1 w-full"
+      showsVerticalScrollIndicator={false}
+      bounces={Platform.OS === "ios" ? false : true}
+    >
       <View className="flex-1 flex-shrink">
         <LinearGradient
           colors={[pokemonTypeColor, pokemonTypeColor, "#ffffff"]}

@@ -1,7 +1,7 @@
 import * as Animatable from "react-native-animatable";
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, Image, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ParamsProps } from "../@types/pokemonParamsProps";
 import { Header } from "../components/Header";
@@ -48,7 +48,10 @@ export function ComparatorResultScreen() {
 
   return (
     <Animatable.View animation="bounceInLeft">
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        bounces={Platform.OS === "ios" ? false : true}
+      >
         <SafeAreaView>
           <View className="py-5 px-6">
             <Header title="Comparator" />
