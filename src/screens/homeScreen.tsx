@@ -143,7 +143,7 @@ export function HomeScreen() {
             numColumns={2}
           />
 
-          <RandomButton />
+          <RandomButton setIsLoading={setIsLoading}/>
         </>
       )}
     </Animated.View>

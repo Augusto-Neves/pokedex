@@ -4,11 +4,16 @@ import { searchPokemon } from "../../service/axios";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 
-export function RandomButton() {
+interface RandomButtonProps {
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>; 
+}
+
+export function RandomButton({ setIsLoading }:RandomButtonProps) {
   const navigation = useNavigation();
   const [isDisabled, setIsDisabled] = useState(false);
 
   async function handleRandomSearch() {
+    setIsLoading(true)
     setIsDisabled(true);
     const minValue = 1;
     const maxValue = 1008;
@@ -30,6 +35,7 @@ export function RandomButton() {
       });
 
       setIsDisabled(false);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
       setIsDisabled(false);
