@@ -11,7 +11,6 @@ import { useCallback } from "react";
 import { LogBox } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-SplashScreen.preventAutoHideAsync();
 
 LogBox.ignoreLogs([
   "Request failed with status code 404",
@@ -25,8 +24,10 @@ export default function App() {
     Roboto_500Medium,
     Roboto_700Bold,
   });
-
+  
   const onLayoutRootView = useCallback(async () => {
+    await SplashScreen.preventAutoHideAsync();
+
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
     }
@@ -35,10 +36,10 @@ export default function App() {
   if (!fontsLoaded) {
     return null;
   }
-
+    
   return (
     <GestureHandlerRootView className="flex-1">
-      <Routes onReady={onLayoutRootView} />
+      <Routes onReady={() => onLayoutRootView} />
       <StatusBar style="dark" />
     </GestureHandlerRootView>
   );
