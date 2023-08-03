@@ -111,6 +111,7 @@ export function PokemonSlot({ pokemon, setPokemon }: PokemonSlotProps) {
             HeaderComponent={
               <Text className="text-2xl ml-6 mt-8 mb-6">Choose a Pokémon</Text>
             }
+            modalTopOffset={50}
           >
             <View className="flex-1 items-center justify-center h-full">
               <View className="flex-row space-x-2 mt-3 mx-10 p-3 rounded-lg border border-gray-200 flex-1 items-center">
