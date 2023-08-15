@@ -1,16 +1,16 @@
-import axios from "axios";
+import axios from 'axios';
 
-interface PokemonInterface {
+interface DefaultItems {
   name: string;
   url: string;
 }
 
-interface PokemonsWithNameAndUrlResponse {
-  results: [PokemonInterface];
+interface DefaultResponse {
+  results: [DefaultItems];
 }
 
 export const server = axios.create({
-  baseURL: "https://pokeapi.co/api/v2/",
+  baseURL: 'https://pokeapi.co/api/v2/',
 });
 
 export async function getPokemonsWithLimit(limit: string) {
@@ -20,8 +20,7 @@ export async function getPokemonsWithLimit(limit: string) {
 
     const response = await server.get(`/pokemon?limit=${limit}`);
 
-    const pokemonsWithNameAndUrl =
-      response.data as PokemonsWithNameAndUrlResponse;
+    const pokemonsWithNameAndUrl = response.data as DefaultResponse;
 
     pokemonsWithNameAndUrl.results.forEach((pokemon) => {
       pokemonsEndPoints.push(pokemon.url);
@@ -79,6 +78,44 @@ export async function getFavoritePokemons(pokemonsIds: any[]) {
     favoritesPokemons = allFavoritePokemonsData;
 
     return favoritesPokemons;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getPokemonsTypes() {
+  try {
+    let pokemonsTypes: string[] = [];
+
+    const response = await server.get('/type');
+
+    const allTypes = response.data as DefaultResponse;
+
+    allTypes.results.forEach((type) => {
+      pokemonsTypes.push(type.name.replace(/\b\w/g, match => match.toUpperCase()));
+    });
+
+    console.log(pokemonsTypes);
+    
+    return pokemonsTypes.sort((a, b) => a.localeCompare(b));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getPokemonsGenerations() {
+  try {
+    let generations: string[] = [];
+
+    const response = await server.get('/generation');
+
+    const allGenerationsResponse = response.data as DefaultResponse;
+
+    allGenerationsResponse.results.forEach((generation) => {
+      return generations.push(generation.name.replace(/^(.*?)-([ivxlcdm]+)$/i, (_match, part1, part2) => part1.charAt(0).toUpperCase() + part1.slice(1) + '-' + part2.toUpperCase()));
+    });
+
+    return generations;
   } catch (error) {
     console.log(error);
   }
