@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,27 +7,39 @@ import {
   TouchableOpacity,
   FlatList,
   Animated,
-} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { PokemonCard } from "../components/PokemonCard";
-import { getPokemonsWithLimit, server } from "../service/axios";
-import { MaterialIcons, Feather } from "@expo/vector-icons";
-import { RandomButton } from "../components/RandomButton";
-import { useNavigation } from "@react-navigation/native";
-import { fadeInAnimation } from "../utils/fadeInAnimation";
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { PokemonCard } from '../components/PokemonCard';
+import {
+  getPokemonsGenerations,
+  getPokemonsTypes,
+  getPokemonsWithLimit,
+  server,
+} from '../service/axios';
+import { MaterialIcons, Feather } from '@expo/vector-icons';
+import { RandomButton } from '../components/RandomButton';
+import { useNavigation } from '@react-navigation/native';
+import { fadeInAnimation } from '../utils/fadeInAnimation';
+import { Modalize } from 'react-native-modalize';
+import { Portal } from 'react-native-portalize';
+import { FilterComponent } from '../components/FilterComponent';
 
 export function HomeScreen() {
   const [pokemons, setPokemons] = useState<any>([]);
+  const [pokemonsTypes, setPokemonsTypes] = useState<string[]>([]);
+  const [pokemonsGenerations, setPokemonsGenerations] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [typedText, setTypedText] = useState("");
+  const [typedText, setTypedText] = useState('');
+
   const navigation = useNavigation();
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const filterModalRef = useRef<Modalize>(null);
 
   async function getInitialPokemons() {
     try {
-      setTypedText("");
+      setTypedText('');
       setIsLoading(true);
-      const initialPokemons = await getPokemonsWithLimit("10");
+      const initialPokemons = await getPokemonsWithLimit('10');
 
       setPokemons(initialPokemons);
       setIsLoading(false);
@@ -63,17 +75,31 @@ export function HomeScreen() {
   }
 
   function handlePokemonNavigation(pokemon: any) {
-    navigation.navigate("Pokemon", {
+    navigation.navigate('Pokemon', {
       pokemon,
     });
   }
 
+  function handleOpenFilterModal() {
+    filterModalRef.current?.open();
+  }
+
   useEffect(() => {
     fadeInAnimation(fadeAnim);
+
+    (async () => {
+      const [allPokemonsTypes, allPokemonsGenerations] = await Promise.all([
+        getPokemonsTypes(),
+        getPokemonsGenerations(),
+      ]);
+
+      setPokemonsTypes(allPokemonsTypes as unknown as string[]);
+      setPokemonsGenerations(allPokemonsGenerations as unknown as string[]);
+    })();
   }, []);
 
   useEffect(() => {
-    if (typedText === "") {
+    if (typedText === '') {
       getInitialPokemons();
     } else if (typedText) {
       handleSearch();
@@ -113,6 +139,7 @@ export function HomeScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             className="h-12 w-12 bg-gray-200 items-center justify-center m-4 rounded-2xl"
+            onPress={handleOpenFilterModal}
           >
             <Feather name="filter" size={24} color="black" />
           </TouchableOpacity>
@@ -129,21 +156,55 @@ export function HomeScreen() {
               <PokemonCard
                 pokemon={{
                   ...item,
-                  sprite: item.sprites?.other["official-artwork"].front_default,
+                  sprite: item.sprites?.other['official-artwork'].front_default,
                 }}
                 onPress={handlePokemonNavigation}
               />
             )}
             keyExtractor={(item) => item.id}
             contentContainerStyle={{
-              alignItems: "center",
-              justifyContent: "center",
+              alignItems: 'center',
+              justifyContent: 'center',
               paddingBottom: 80,
             }}
             numColumns={2}
           />
 
-          <RandomButton setIsLoading={setIsLoading}/>
+          <RandomButton setIsLoading={setIsLoading} />
+
+          <Portal>
+            <Modalize
+              ref={filterModalRef}
+              modalTopOffset={80}
+              modalStyle={{
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              FooterComponent={
+                <TouchableOpacity className="items-center justify-center h-11 w-96 rounded-2xl bg-yellow-400 mb-16 py-3">
+                  <Text>Apply</Text>
+                </TouchableOpacity>
+              }
+            >
+              <Text className="text-2xl ml-6 mt-8 mb-8">Filters</Text>
+
+              {/* Generations */}
+              <FilterComponent
+                items={pokemonsGenerations}
+                title="Generations"
+              />
+
+              {/* Types */}
+              <FilterComponent items={pokemonsTypes} title="Types" hasIcon />
+
+              {/* Strong */}
+              <FilterComponent items={pokemonsTypes} title="Strong" hasIcon />
+
+              {/* Weakness */}
+              <FilterComponent items={pokemonsTypes} title="Weakness" hasIcon />
+            </Modalize>
+          </Portal>
         </>
       )}
     </Animated.View>
