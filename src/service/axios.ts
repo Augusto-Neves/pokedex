@@ -94,8 +94,6 @@ export async function getPokemonsTypes() {
     allTypes.results.forEach((type) => {
       pokemonsTypes.push(type.name.replace(/\b\w/g, match => match.toUpperCase()));
     });
-
-    console.log(pokemonsTypes);
     
     return pokemonsTypes.sort((a, b) => a.localeCompare(b));
   } catch (error) {
