@@ -1,5 +1,6 @@
-import { NavigationContainer } from "@react-navigation/native";
-import { AppRoutes } from "./routes";
+import { NavigationContainer } from '@react-navigation/native';
+import { AppRoutes } from './routes';
+import { PokemonContextProvider } from '../context/PokemonContext';
 
 type Props = {
   onReady?: () => void;
@@ -7,8 +8,10 @@ type Props = {
 
 export function Routes({ onReady }: Props) {
   return (
-    <NavigationContainer onReady={onReady}>
-      <AppRoutes />
-    </NavigationContainer>
+    <PokemonContextProvider>
+      <NavigationContainer onReady={onReady}>
+        <AppRoutes />
+      </NavigationContainer>
+    </PokemonContextProvider>
   );
 }
